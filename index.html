@@ -1,0 +1,421 @@
+sudo tee /var/www/html/index.html > /dev/null <<'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentHub | Student Management System</title>
+<style>
+:root {
+  --navy: #142747;
+  --blue: #3769f5;
+  --light: #f4f7fc;
+  --text: #243550;
+  --muted: #71809a;
+  --border: #e7edf5;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--light);
+  color: var(--text);
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+header {
+  background: var(--navy);
+  color: white;
+  padding: 17px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-icon {
+  background: #ffffff1c;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 25px;
+}
+.brand h1 { font-size: 21px; margin: 0; }
+.brand p { margin: 4px 0 0; color: #b9c9e3; font-size: 12px; }
+nav { display: flex; gap: 8px; flex-wrap: wrap; }
+nav a {
+  color: #d9e4f5; text-decoration: none;
+  padding: 10px 13px; border-radius: 8px; font-size: 14px;
+}
+nav a:hover, nav a.active { background: #ffffff18; color: white; }
+main { max-width: 1450px; margin: auto; padding: 28px 5%; }
+.hero {
+  background: linear-gradient(115deg, #e4efff, #f8faff 70%, #e8f4ff);
+  border: 1px solid #dce8fb;
+  border-radius: 20px;
+  padding: 30px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 25px; margin-bottom: 25px;
+}
+.hero h2 { font-size: clamp(26px, 3vw, 38px); margin: 0 0 12px; color: #17335c; }
+.hero h2 span { color: var(--blue); }
+.hero p { color: #617493; line-height: 1.7; margin: 0; max-width: 650px; }
+.hero-art { font-size: 75px; min-width: 120px; text-align: center; }
+.features { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 22px; }
+.features span { color: #3e587e; font-size: 13px; }
+.stats {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+.stat {
+  padding: 21px; border-radius: 15px; background: white;
+  border: 1px solid var(--border); box-shadow: 0 3px 12px #24355008;
+}
+.stat-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.stat-label { color: var(--muted); font-size: 13px; }
+.stat-icon { font-size: 22px; padding: 10px; border-radius: 12px; }
+.stat-value { font-size: 30px; font-weight: 750; margin-top: 13px; color: #1c3151; }
+.stat-note { color: #168354; font-size: 12px; margin-top: 6px; }
+.blue { background: #eaf2ff; }
+.green { background: #e6f8ef; }
+.purple { background: #f1ebff; }
+.orange { background: #fff1e3; }
+.panel {
+  background: white; border: 1px solid var(--border);
+  border-radius: 17px; padding: 22px;
+  box-shadow: 0 4px 15px #24355008;
+}
+.panel-heading {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 15px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.panel-heading h2 { margin: 0; font-size: 21px; color: #1a3152; }
+.panel-heading p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+.controls { display: flex; gap: 10px; flex-wrap: wrap; }
+input, select {
+  border: 1px solid #dce4ef; background: white;
+  border-radius: 9px; padding: 11px 12px; color: var(--text);
+  outline: none; min-width: 0;
+}
+input:focus, select:focus { border-color: var(--blue); }
+#search { width: 270px; }
+.btn {
+  border: 0; border-radius: 9px; padding: 11px 15px;
+  font-weight: 650; font-size: 13px; transition: .15s;
+}
+.btn:hover { filter: brightness(.96); transform: translateY(-1px); }
+.primary { background: var(--blue); color: white; }
+.secondary { background: #edf2fa; color: #334b70; }
+.success { background: #e0f7e9; color: #087443; }
+.warning { background: #fff0c8; color: #865600; }
+.danger { background: #ffe7e8; color: #bf2632; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+th {
+  text-align: left; padding: 14px 13px; font-size: 12px;
+  text-transform: uppercase; letter-spacing: .35px;
+  color: #667791; background: #f5f8fc;
+}
+td { padding: 15px 13px; border-bottom: 1px solid #edf1f6; font-size: 13px; }
+tbody tr:hover { background: #fafcff; }
+.student { display: flex; align-items: center; gap: 10px; }
+.avatar {
+  width: 35px; height: 35px; display: grid; place-items: center;
+  border-radius: 11px; background: #e8efff; color: #315be0;
+  font-weight: 750; flex-shrink: 0;
+}
+.student-name { font-weight: 650; color: #263b5a; }
+.subtext { color: #8b98ac; font-size: 11px; margin-top: 4px; }
+.badge {
+  display: inline-block; border-radius: 20px; padding: 6px 10px;
+  background: #e1f8ea; color: #147943; font-size: 11px; font-weight: 650;
+}
+.actions { display: flex; gap: 6px; }
+.actions .btn { padding: 7px 9px; font-size: 12px; }
+.table-footer {
+  display: flex; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap; padding-top: 17px; color: var(--muted); font-size: 12px;
+}
+.empty { text-align: center; color: var(--muted); padding: 35px; }
+footer {
+  margin-top: 28px; background: var(--navy); color: #d7e2f2;
+  padding: 22px 5%; display: flex; justify-content: space-between;
+  gap: 15px; flex-wrap: wrap; font-size: 12px;
+}
+footer span { color: #a9bfdf; }
+dialog {
+  border: 0; border-radius: 16px; padding: 0; width: min(470px, 92vw);
+  box-shadow: 0 20px 80px #0c1c3650; color: var(--text);
+}
+dialog::backdrop { background: #101d35a6; }
+.modal-head { padding: 21px 24px; border-bottom: 1px solid var(--border); }
+.modal-head h3 { margin: 0; font-size: 20px; }
+.modal-body { padding: 22px 24px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field.full { grid-column: 1 / -1; }
+.field label { color: #64748b; font-size: 12px; font-weight: 650; }
+.field input, .field select { width: 100%; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 20px; }
+.details { line-height: 1.9; color: #50617b; }
+.details strong { color: #203754; }
+@media (max-width: 900px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-art { font-size: 55px; }
+}
+@media (max-width: 560px) {
+  header { padding: 15px 4%; }
+  main { padding: 18px 4%; }
+  .hero { padding: 22px; }
+  .hero-art { display: none; }
+  .stats { gap: 10px; }
+  .stat { padding: 14px; }
+  .stat-value { font-size: 25px; }
+  .panel { padding: 15px; }
+  #search { width: 100%; }
+  .controls { width: 100%; }
+  .controls > * { flex: 1; }
+  .form-grid { grid-template-columns: 1fr; }
+  .field.full { grid-column: auto; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-icon">🎓</div>
+    <div>
+      <h1>StudentHub</h1>
+      <p>Student Management System</p>
+    </div>
+  </div>
+  <nav>
+    <a class="active" href="#home">Dashboard</a>
+    <a href="#students">Students</a>
+    <a href="#students" onclick="setTimeout(()=>document.getElementById('addBtn').click(),0)">Add Student</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div>
+      <h2>Welcome to <span>StudentHub</span></h2>
+      <p>Manage student records, monitor academic progress, and keep your department organized in one place.</p>
+      <div class="features">
+        <span>👥 Student Records</span>
+        <span>📊 Academic Performance</span>
+        <span>🔎 Quick Search</span>
+        <span>🔐 Organized Records</span>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">📚🎓</div>
+  </section>
+
+  <section class="stats" aria-label="Student statistics">
+    <article class="stat">
+      <div class="stat-top"><span class="stat-label">Total Students</span><span class="stat-icon blue">👥</span></div>
+      <div class="stat-value" id="total">5</div><div class="stat-note">Student records</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span class="stat-label">Active Students</span><span class="stat-icon green">✓</span></div>
+      <div class="stat-value" id="active">5</div><div class="stat-note">Currently enrolled</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span class="stat-label">Average CGPA</span><span class="stat-icon purple">📈</span></div>
+      <div class="stat-value" id="average">8.64</div><div class="stat-note">Across all students</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top"><span class="stat-label">Top Performer</span><span class="stat-icon orange">⭐</span></div>
+      <div class="stat-value" id="top">9.64</div><div class="stat-note" id="topName">Highest CGPA</div>
+    </article>
+  </section>
+
+  <section class="panel" id="students">
+    <div class="panel-heading">
+      <div>
+        <h2>Student Directory</h2>
+        <p>Manage student information and academic records.</p>
+      </div>
+      <div class="controls">
+        <input id="search" type="search" placeholder="🔎 Search students..." aria-label="Search students">
+        <button class="btn primary" id="addBtn">+ Add Student</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Student</th><th>Roll No.</th><th>Department</th><th>Year</th><th>CGPA</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="studentRows"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <span id="recordCount">Showing 5 students</span>
+      <span>Academic year 2026–2027</span>
+    </div>
+  </section>
+</main>
+
+<footer id="about">
+  <div>© 2026 StudentHub · Student Management System</div>
+  <span>Learn &nbsp; | &nbsp; Grow &nbsp; | &nbsp; Succeed</span>
+</footer>
+
+<dialog id="studentDialog">
+  <form id="studentForm">
+    <div class="modal-head"><h3 id="formTitle">Add Student</h3></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field full"><label for="name">Full Name *</label><input id="name" required maxlength="70" placeholder="Enter student name"></div>
+        <div class="field"><label for="roll">Roll Number *</label><input id="roll" required maxlength="20" placeholder="e.g. CE006"></div>
+        <div class="field"><label for="department">Department</label>
+          <select id="department"><option>Computer Engineering</option><option>Information Technology</option><option>AI & Data Science</option><option>Electronics</option><option>Mechanical Engineering</option><option>Civil Engineering</option></select>
+        </div>
+        <div class="field"><label for="year">Academic Year</label><select id="year"><option>FY</option><option>SY</option><option selected>TY</option><option>Final Year</option></select></div>
+        <div class="field"><label for="cgpa">CGPA (0–10) *</label><input id="cgpa" type="number" required min="0" max="10" step="0.01" placeholder="e.g. 8.75"></div>
+        <div class="field full"><label for="status">Status</label><select id="status"><option>Active</option><option>Inactive</option></select></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn secondary" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn primary">Save Student</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="viewDialog">
+  <div class="modal-head"><h3>Student Profile</h3></div>
+  <div class="modal-body">
+    <div id="studentDetails" class="details"></div>
+    <div class="modal-actions"><button class="btn primary" id="closeView">Close</button></div>
+  </div>
+</dialog>
+
+<script>
+const students = [
+  {id:1,name:"Revati Bhosale",roll:"CE001",department:"Computer Engineering",year:"TY",cgpa:9.64,status:"Active"},
+  {id:2,name:"Sneha Patil",roll:"CE002",department:"Computer Engineering",year:"TY",cgpa:8.92,status:"Active"},
+  {id:3,name:"Aditya Deshmukh",roll:"CE003",department:"Computer Engineering",year:"TY",cgpa:8.45,status:"Active"},
+  {id:4,name:"Priya Kale",roll:"CE004",department:"Computer Engineering",year:"TY",cgpa:8.21,status:"Active"},
+  {id:5,name:"Rohan Shinde",roll:"CE005",department:"Computer Engineering",year:"TY",cgpa:7.98,status:"Active"}
+];
+let nextId = 6;
+let editingId = null;
+const $ = id => document.getElementById(id);
+const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+function render() {
+  const query = $("search").value.trim().toLowerCase();
+  const filtered = students.filter(s =>
+    [s.name,s.roll,s.department,s.year,s.status].some(v => v.toLowerCase().includes(query))
+  );
+  $("studentRows").innerHTML = filtered.length ? filtered.map(s => `
+    <tr>
+      <td><div class="student"><div class="avatar">${escapeHTML(s.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase())}</div>
+      <div><div class="student-name">${escapeHTML(s.name)}</div><div class="subtext">Student ID: ${String(s.id).padStart(3,"0")}</div></div></div></td>
+      <td>${escapeHTML(s.roll)}</td><td>${escapeHTML(s.department)}</td><td>${escapeHTML(s.year)}</td>
+      <td><strong>${s.cgpa.toFixed(2)}</strong></td>
+      <td><span class="badge" style="${s.status==="Inactive"?"background:#edf0f5;color:#65738a":""}">${escapeHTML(s.status)}</span></td>
+      <td><div class="actions">
+        <button class="btn secondary" data-action="view" data-id="${s.id}" title="View profile">View</button>
+        <button class="btn warning" data-action="edit" data-id="${s.id}">Edit</button>
+        <button class="btn danger" data-action="delete" data-id="${s.id}">Delete</button>
+      </div></td>
+    </tr>`).join("") : `<tr><td colspan="7" class="empty">No students found. Try another search.</td></tr>`;
+
+  const active = students.filter(s => s.status === "Active");
+  const average = students.length ? students.reduce((sum,s)=>sum+s.cgpa,0)/students.length : 0;
+  const top = students.length ? students.reduce((a,b)=>a.cgpa>b.cgpa?a:b) : null;
+  $("total").textContent = students.length;
+  $("active").textContent = active.length;
+  $("average").textContent = average.toFixed(2);
+  $("top").textContent = top ? top.cgpa.toFixed(2) : "—";
+  $("topName").textContent = top ? top.name : "No records";
+  $("recordCount").textContent = `Showing ${filtered.length} of ${students.length} students`;
+}
+
+function resetForm() {
+  $("studentForm").reset();
+  editingId = null;
+  $("formTitle").textContent = "Add Student";
+  $("roll").disabled = false;
+}
+function openAdd() {
+  resetForm();
+  $("studentDialog").showModal();
+  $("name").focus();
+}
+$("addBtn").addEventListener("click", openAdd);
+$("cancelBtn").addEventListener("click", ()=>$("studentDialog").close());
+$("closeView").addEventListener("click", ()=>$("viewDialog").close());
+$("search").addEventListener("input", render);
+
+$("studentForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const name = $("name").value.trim();
+  const roll = $("roll").value.trim().toUpperCase();
+  const cgpa = Number($("cgpa").value);
+  if (!name || !roll || !Number.isFinite(cgpa) || cgpa < 0 || cgpa > 10) {
+    alert("Please enter valid student details. CGPA must be between 0 and 10.");
+    return;
+  }
+  if (students.some(s => s.roll.toLowerCase() === roll.toLowerCase() && s.id !== editingId)) {
+    alert("That roll number already exists. Please use a unique roll number.");
+    return;
+  }
+  const record = {
+    name, roll, cgpa, department:$("department").value,
+    year:$("year").value, status:$("status").value
+  };
+  if (editingId !== null) {
+    Object.assign(students.find(s=>s.id===editingId),record);
+  } else {
+    students.push({id:nextId++,...record});
+  }
+  $("studentDialog").close();
+  resetForm();
+  render();
+});
+
+$("studentRows").addEventListener("click", event => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  const id = Number(button.dataset.id);
+  const s = students.find(item=>item.id===id);
+  if (!s) return;
+
+  if (button.dataset.action === "view") {
+    $("studentDetails").innerHTML = `
+      <p><strong>Name:</strong> ${escapeHTML(s.name)}</p>
+      <p><strong>Roll number:</strong> ${escapeHTML(s.roll)}</p>
+      <p><strong>Department:</strong> ${escapeHTML(s.department)}</p>
+      <p><strong>Academic year:</strong> ${escapeHTML(s.year)}</p>
+      <p><strong>CGPA:</strong> ${s.cgpa.toFixed(2)} / 10</p>
+      <p><strong>Status:</strong> ${escapeHTML(s.status)}</p>`;
+    $("viewDialog").showModal();
+  } else if (button.dataset.action === "edit") {
+    editingId = id;
+    $("formTitle").textContent = "Edit Student";
+    $("name").value = s.name;
+    $("roll").value = s.roll;
+    $("roll").disabled = false;
+    $("department").value = s.department;
+    $("year").value = s.year;
+    $("cgpa").value = s.cgpa;
+    $("status").value = s.status;
+    $("studentDialog").showModal();
+  } else if (button.dataset.action === "delete") {
+    if (confirm(`Delete the record for ${s.name}? This cannot be undone.`)) {
+      students.splice(students.findIndex(item=>item.id===id),1);
+      render();
+    }
+  }
+});
+render();
+</script>
+</body>
+</html>
+EOF
